@@ -26,13 +26,31 @@ Object.keys(dataApp).map((formation)=>{
     switch (header) {
       case 'datePostulation':
         var dP = user[header].split('-');
-        return '\n\t\t\t<td>' + dP[2] + '-' + dP[1] + '-' + dP[0] + ' ' + dP[4] + '</td>';
+        // Fix 0 padding in case they are missing
+        return '\n\t\t\t<td>' + dP[2] + '-' + ('00'+dP[1]).substring(dP[1].length)  + '-' + ('00'+dP[0]).substring(dP[0].length) + '&nbsp;' + dP[4] + '</td>';
+        //return '\n\t\t\t<td>' + dP[2] + '-' + dP[1] + '-' + dP[0] + '&nbsp;' + dP[4] + '</td>';
       case 'addresseApprentiComplete':
-        return '\n\t\t\t<td>' + user[header].rue +'<br />'+ user[header].NPA + '</td>';
+    return '\n\t\t\t<td>' + user[header].rue +'<br />' + user[header].NPA + ' <a href="http://maps.google.com/?q=' + (user[header].rue + ' ' + user[header].NPA).split(' ').join('+') + '"><img src="../img/fff/icons/map_go.png" alt="' + user[header].NPA + '" /></a></td>';
+      case 'mailApprenti':
+        return '\n\t\t\t<td><a href="mailto:' + user[header] + '">' + user[header] + '</a></td>';
+      case 'genreApprenti':
+        return '\n\t\t\t<td><img src="../img/fff/icons/' + ((user[header] == 'Femme') ? 'female.png' : 'male.png') + '" title="' + user[header] + '" /></td>';
+      case 'maturite':
+      case 'majeur':
+      case 'dejaCandidat':
+        return '\n\t\t\t<td><img src="../img/fff/icons/' + ((user[header] == 'true') ? 'tick.png' : 'cross.png') + '" title="' + user[header] + '" /></td>';
       case 'connaissancesLinguistiques':
-        return '\n\t\t\t<td>' + user[header].join(', ') + '</td>';
+        return '\n\t\t\t<td>' + user[header].map(header => '\n\t\t\t\t<img src="../img/fff/flags/' + header + '.png" title="' + header + '" />').join('&nbsp;') + '</td>';
+      case 'dateNaissanceApprenti':
+        var dob = user[header].split('/');
+        var birthday = new Date(dob[2], dob[1], dob[0]);
+        return '\n\t\t\t<td>' + dob[2] + ' (' + _calculateAge(birthday) + 'ans)</td>';
       case 'activitesProfessionnelles':
         return '\n\t\t\t<td>' + user[header].map(empl => empl.employeur).join('<br />') + '</td>';
+      case 'telFixeApprenti':
+        return '\n\t\t\t<td nowrap><img src="../img/fff/icons/telephone.png" />&nbsp;' + user[header].split(' ').join('&nbsp;') + '</td>';
+      case 'telMobileApprenti':
+        return '\n\t\t\t<td nowrap><img src="../img/fff/icons/phone.png" />&nbsp;' + user[header].split(' ').join('&nbsp;') + '</td>';
       case 'stages':
         return '\n\t\t\t<td>' + user[header].map(stage => stage.employeur).join('<br />') + '</td>';
       default:
@@ -43,7 +61,7 @@ Object.keys(dataApp).map((formation)=>{
   html += '\n\t</table>';
 //  html += '\n<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>';
 //  html += '\n<script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>';
-  html += "\n<script>$(document).ready(function(){$('#" + formation + "').DataTable();});</script>";
+  html += "\n<script>$(document).ready(function(){$('#" + formation + "').DataTable({'pageLength': 50});});</script>";
   html += '\n</body>\n</html>';
   console.log(html);
   fs.writeFileSync('./results/'+formation+'.html', html, 'UTF-8');
@@ -76,4 +94,10 @@ function fromDir(startPath, filter) {
       dataApp[form].push(obj);
     }
   }
+}
+function _calculateAge(birthday) { // birthday is a date
+  var birthday = new Date(birthday);
+  var ageDifMs = Date.now() - birthday.getTime();
+  var ageDate = new Date(ageDifMs); // miliseconds from epoch
+  return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
