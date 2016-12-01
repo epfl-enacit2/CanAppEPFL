@@ -4,11 +4,25 @@ var fs = require('fs'),
   conf = require('./config.js'),
   dataApp = {};
 
+// Create the dataApp object with all informations.json file of the folder's hierarchy
 fromDir(conf.rootPath, 'informations.json');
 
-//console.log(dataApp)
+// Fetch user's submitted annexes
+Object.keys(dataApp).map((formation)=>{
+  dataApp[formation].map(user =>{
+    //                                                                                                 ↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴ dude!
+    annexesPath = conf.rootPath + formation + path.sep + user.tempSciper + '--' + user.datePostulation.split(':').join('-') + '--' + user.mailApprenti + path.sep + 'annexes' ;
+    var annexes = fs.readdirSync(annexesPath);
+    user['annexes'] = annexes
+    console.log(user)
+  });
+});
+
+// Save the concatenation of all information in json format
+//                  - maybe it will be useful at some point
 fs.writeFileSync('AllIn.json', JSON.stringify(dataApp), 'UTF-8');
 
+// Create the HTML files and save it to the results directory
 Object.keys(dataApp).map((formation)=>{
   var html = '<!DOCTYPE html>\n<html>\n<head>';
   html += '\n\t<meta charset="utf-8" />';
@@ -52,21 +66,23 @@ Object.keys(dataApp).map((formation)=>{
       case 'telMobileApprenti':
         return '\n\t\t\t<td nowrap><img src="../img/fff/icons/phone.png" />&nbsp;' + user[header].split(' ').join('&nbsp;') + '</td>';
       case 'stages':
-        return '\n\t\t\t<td>' + user[header].map(stage => stage.employeur).join('<br />') + '</td>';
+        return '\n\t\t\t<td nowrap>' + user[header].map(stage => stage.employeur).join(',<br />') + '</td>';
+      case 'annexes':
+        var annexesPath = '..' + path.sep + conf.rootPath + formation + path.sep + user.tempSciper + '--' + user.datePostulation.split(':').join('-') + '--' + user.mailApprenti + path.sep + 'annexes/' ;
+        return '\n\t\t\t<td nowrap><ul>' + user[header].map(annexe => '<li><a target="_blank" href="' + annexesPath + annexe + '">' + annexe + '</a></li>').join('\n') + '</ul></td>';
       default:
         return '\n\t\t\t<td>' + user[header] + '</td>';
     }
   }).join('') + '\n\t\t</tr>').join('');
 
   html += '\n\t</table>';
-//  html += '\n<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>';
-//  html += '\n<script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>';
   html += "\n<script>$(document).ready(function(){$('#" + formation + "').DataTable({'pageLength': 50});});</script>";
   html += '\n</body>\n</html>';
-  console.log(html);
+  //console.log(html);
   fs.writeFileSync('./results/'+formation+'.html', html, 'UTF-8');
 });
 
+// Recurse into the startPath directory to find and read all the file matching filter
 function fromDir(startPath, filter) {
   if (!fs.existsSync(startPath)) {
     console.log("no dir ", startPath);
@@ -95,6 +111,8 @@ function fromDir(startPath, filter) {
     }
   }
 }
+
+// Return an Human Readable Date Diff in Year (aka Age)
 function _calculateAge(birthday) { // birthday is a date
   var birthday = new Date(birthday);
   var ageDifMs = Date.now() - birthday.getTime();
