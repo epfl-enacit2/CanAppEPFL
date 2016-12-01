@@ -13,8 +13,11 @@ Object.keys(dataApp).map((formation)=>{
     //                                                                                                 ↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴ dude!
     annexesPath = conf.rootPath + formation + path.sep + user.tempSciper + '--' + user.datePostulation.split(':').join('-') + '--' + user.mailApprenti + path.sep + 'annexes' ;
     var annexes = fs.readdirSync(annexesPath);
+    // Remove Thumbs.db
+    annexes = annexes.filter(function(item) {
+        return item !== 'Thumbs.db';
+    });
     user['annexes'] = annexes
-    console.log(user)
   });
 });
 
@@ -44,7 +47,20 @@ Object.keys(dataApp).map((formation)=>{
         return '\n\t\t\t<td>' + dP[2] + '-' + ('00'+dP[1]).substring(dP[1].length)  + '-' + ('00'+dP[0]).substring(dP[0].length) + '&nbsp;' + dP[4] + '</td>';
         //return '\n\t\t\t<td>' + dP[2] + '-' + dP[1] + '-' + dP[0] + '&nbsp;' + dP[4] + '</td>';
       case 'addresseApprentiComplete':
-    return '\n\t\t\t<td>' + user[header].rue +'<br />' + user[header].NPA + ' <a href="http://maps.google.com/?q=' + (user[header].rue + ' ' + user[header].NPA).split(' ').join('+') + '"><img src="../img/fff/icons/map_go.png" alt="' + user[header].NPA + '" /></a></td>';
+        return '\n\t\t\t<td>' + user[header].rue +'<br />' + user[header].NPA + ' <a href="http://maps.google.com/?q=' + (user[header].rue + ' ' + user[header].NPA).split(' ').join('+') + '"><img src="../img/fff/icons/map_go.png" alt="' + user[header].NPA + '" /></a></td>';
+      case 'filiere':
+        switch (user[header]) {
+          case 'entreprise':
+            return '\n\t\t\t<td><img src="../img/fff/icons/computer.png" title="' + user[header] + '"/></td>';
+          case 'developpementApplications':
+            return '\n\t\t\t<td><img src="../img/fff/icons/script_code.png" title="' + user[header] + '"/></td>';
+          case 'techniqueSysteme':
+            return '\n\t\t\t<td><img src="../img/fff/icons/server_link.png" title="' + user[header] + '"/></td>';
+          case 'neSaisPas':
+            return '\n\t\t\t<td><img src="../img/fff/icons/help.png" title="' + user[header] + '"/></td>';
+          default:
+            return '\n\t\t\t<td>' + user[header] + '</td>';
+        }
       case 'mailApprenti':
         return '\n\t\t\t<td><a href="mailto:' + user[header] + '">' + user[header] + '</a></td>';
       case 'genreApprenti':
@@ -78,7 +94,7 @@ Object.keys(dataApp).map((formation)=>{
   html += '\n\t</table>';
   html += "\n<script>$(document).ready(function(){$('#" + formation + "').DataTable({'pageLength': 50});});</script>";
   html += '\n</body>\n</html>';
-  //console.log(html);
+  console.log(html);
   fs.writeFileSync('./results/'+formation+'.html', html, 'UTF-8');
 });
 
