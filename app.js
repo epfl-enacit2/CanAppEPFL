@@ -10,8 +10,18 @@ fromDir(conf.rootPath, 'informations.json');
 fs.writeFileSync('AllIn.json', JSON.stringify(dataApp), 'UTF-8');
 
 Object.keys(dataApp).map((formation)=>{
-  var html = '<!DOCTYPE html>\n<html>\n<head>\n\t<meta charset="utf-8" />\n\t<title>Cadidature ' + formation + '</title>\n</head>\n<body>\n\t<h2>' + formation + ' (fichier généré le : ' + new Date().toISOString() + ')</h2>\n\t<table>';
-  html += '\n\t\t\t<tr>' + conf.tableHeaders[formation].map(header => '\n\t\t\t<th>' + header + '</th>').join('') + '\n\t\t\t</tr>';
+  var html = '<!DOCTYPE html>\n<html>\n<head>';
+  html += '\n\t<meta charset="utf-8" />';
+  html += '\n\t<title>Candidature ' + formation + '</title>';
+  html += '\n\t<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">';
+  html += '\n\t<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>';
+  html += '\n\t<script src="http://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>';
+  html += '\n</head>';
+  html += '\n<body>';
+  html += '\n\t<h2>' + formation + ' (fichier généré le ' + new Date().toISOString().split('T')[0] + ')</h2>';
+  html += '\n\t<table id="' + formation + '">';
+  html += '\n\t\t<thead>';
+  html += '\n\t\t\t<tr>' + conf.tableHeaders[formation].map(header => '\n\t\t\t<th>' + header + '</th>').join('') + '\n\t\t\t</tr>' + '\n\t\t</thead>';
   html += dataApp[formation].map(user => '\n\t\t<tr>' + conf.tableHeaders[formation].map(header => {
     switch (header) {
       case 'datePostulation':
@@ -30,7 +40,11 @@ Object.keys(dataApp).map((formation)=>{
     }
   }).join('') + '\n\t\t</tr>').join('');
 
-  html += '\n\t</table>\n</body>\n</html>';
+  html += '\n\t</table>';
+//  html += '\n<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>';
+//  html += '\n<script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>';
+  html += "\n<script>$(document).ready(function(){$('#" + formation + "').DataTable();});</script>";
+  html += '\n</body>\n</html>';
   console.log(html);
   fs.writeFileSync('./results/'+formation+'.html', html, 'UTF-8');
 });
