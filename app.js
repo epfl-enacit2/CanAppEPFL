@@ -38,8 +38,8 @@ Object.keys(dataApp).map((formation)=>{
   html += '\n\t<h2>' + formation + ' (fichier généré le ' + new Date().toISOString().split('T')[0] + ')</h2>';
   html += '\n\t<table id="' + formation + '">';
   html += '\n\t\t<thead>';
-  html += '\n\t\t\t<tr>' + conf.tableHeaders[formation].map(header => '\n\t\t\t<th>' + header + '</th>').join('') + '\n\t\t\t</tr>' + '\n\t\t</thead>';
-  html += dataApp[formation].map(user => '\n\t\t<tr>' + conf.tableHeaders[formation].map(header => {
+  html += '\n\t\t\t<tr>' + conf.tableHeaders[formation].headers.map(header => '\n\t\t\t<th nowrap>' + header + '</th>').join('') + '\n\t\t\t</tr>' + '\n\t\t</thead>';
+  html += dataApp[formation].map(user => '\n\t\t<tr>' + conf.tableHeaders[formation].keys.map(header => {
     switch (header) {
       case 'datePostulation':
         var dP = user[header].split('-');
@@ -47,7 +47,7 @@ Object.keys(dataApp).map((formation)=>{
         return '\n\t\t\t<td>' + dP[2] + '-' + ('00'+dP[1]).substring(dP[1].length)  + '-' + ('00'+dP[0]).substring(dP[0].length) + '&nbsp;' + dP[4] + '</td>';
         //return '\n\t\t\t<td>' + dP[2] + '-' + dP[1] + '-' + dP[0] + '&nbsp;' + dP[4] + '</td>';
       case 'addresseApprentiComplete':
-        return '\n\t\t\t<td>' + user[header].rue +'<br />' + user[header].NPA + ' <a href="http://maps.google.com/?q=' + (user[header].rue + ' ' + user[header].NPA).split(' ').join('+') + '"><img src="../img/fff/icons/map_go.png" alt="' + user[header].NPA + '" /></a></td>';
+        return '\n\t\t\t<td nowrap>' + user[header].rue +'<br />' + user[header].NPA + ' <a href="http://maps.google.com/?q=' + (user[header].rue + ' ' + user[header].NPA).split(' ').join('+') + '"><img src="../img/fff/icons/map_go.png" alt="' + user[header].NPA + '" /></a></td>';
       case 'filiere':
         switch (user[header]) {
           case 'entreprise':
