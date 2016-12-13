@@ -10,8 +10,7 @@ fromDir(conf.rootPath, 'informations.json');
 // Fetch user's submitted annexes
 Object.keys(dataApp).map((formation)=>{
   dataApp[formation].map(user =>{
-    //                                                                                                 ↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴↴ dude!
-    annexesPath = conf.rootPath + formation + path.sep + user.tempSciper + '--' + user.datePostulation.split(':').join('-') + '--' + user.mailApprenti + path.sep + 'annexes' ;
+    annexesPath = user.folder + path.sep + 'annexes' ;
     var annexes = fs.readdirSync(annexesPath);
     // Remove Thumbs.db
     annexes = annexes.filter(function(item) {
@@ -51,26 +50,26 @@ Object.keys(dataApp).map((formation)=>{
       case 'filiere':
         switch (user[header]) {
           case 'entreprise':
-            return '\n\t\t\t<td><img src="../img/fff/icons/computer.png" title="' + user[header] + '"/></td>';
+            return '\n\t\t\t<td>Entreprise<img src="../img/fff/icons/computer.png" title="' + user[header] + '"/></td>';
           case 'developpementApplications':
-            return '\n\t\t\t<td><img src="../img/fff/icons/script_code.png" title="' + user[header] + '"/></td>';
+            return '\n\t\t\t<td>Dev<img src="../img/fff/icons/script_code.png" title="' + user[header] + '"/></td>';
           case 'techniqueSysteme':
-            return '\n\t\t\t<td><img src="../img/fff/icons/server_link.png" title="' + user[header] + '"/></td>';
+            return '\n\t\t\t<td>TechSys<img src="../img/fff/icons/server_link.png" title="' + user[header] + '"/></td>';
           case 'neSaisPas':
-            return '\n\t\t\t<td><img src="../img/fff/icons/help.png" title="' + user[header] + '"/></td>';
+            return '\n\t\t\t<td>?<img src="../img/fff/icons/help.png" title="' + user[header] + '"/></td>';
           default:
             return '\n\t\t\t<td>' + user[header] + '</td>';
         }
       case 'mailApprenti':
         return '\n\t\t\t<td><a href="mailto:' + user[header] + '">' + user[header] + '</a></td>';
       case 'genreApprenti':
-        return '\n\t\t\t<td><img src="../img/fff/icons/' + ((user[header] == 'Femme') ? 'female.png' : 'male.png') + '" title="' + user[header] + '" /></td>';
+        return '\n\t\t\t<td>' + ((user[header] == 'Femme') ? 'F <img src="../img/fff/icons/female.png' : 'M <img src="../img/fff/icons/male.png') + '" title="' + user[header] + '" /></td>';
       case 'maturite':
       case 'majeur':
       case 'dejaCandidat':
-        return '\n\t\t\t<td><img src="../img/fff/icons/' + ((user[header] == 'true') ? 'tick.png' : 'cross.png') + '" title="' + user[header] + '" /></td>';
+        return '\n\t\t\t<td>' + ((user[header] == 'true') ? 'O <img src="../img/fff/icons/tick.png' : 'N <img src="../img/fff/icons/cross.png') + '" title="' + user[header] + '" /></td>';
       case 'connaissancesLinguistiques':
-        return '\n\t\t\t<td>' + user[header].map(header => '\n\t\t\t\t<img src="../img/fff/flags/' + header + '.png" title="' + header + '" />').join('&nbsp;') + '</td>';
+        return '\n\t\t\t<td>' + user[header].map(header => '\n\t\t\t\t' + header + '<img src="../img/fff/flags/' + header + '.png" title="' + header + '" />').join('&nbsp;') + '</td>';
       case 'dateNaissanceApprenti':
         var dob = user[header].split('/');
         var birthday = new Date(dob[2], dob[1], dob[0]);
@@ -84,7 +83,7 @@ Object.keys(dataApp).map((formation)=>{
       case 'stages':
         return '\n\t\t\t<td nowrap>' + user[header].map(stage => stage.employeur).join(',<br />') + '</td>';
       case 'annexes':
-        var annexesPath = '..' + path.sep + conf.rootPath + formation + path.sep + user.tempSciper + '--' + user.datePostulation.split(':').join('-') + '--' + user.mailApprenti + path.sep + 'annexes/' ;
+        var annexesPath = '..' + path.sep + user.folder + path.sep + 'annexes/' ;
         return '\n\t\t\t<td nowrap><ul>' + user[header].map(annexe => '<li><a target="_blank" href="' + annexesPath + annexe + '">' + annexe + '</a></li>').join('\n') + '</ul></td>';
       default:
         return '\n\t\t\t<td>' + user[header] + '</td>';
@@ -92,7 +91,7 @@ Object.keys(dataApp).map((formation)=>{
   }).join('') + '\n\t\t</tr>').join('');
 
   html += '\n\t</table>';
-  html += "\n<script>$(document).ready(function(){$('#" + formation + "').DataTable({'pageLength': 50});});</script>";
+  html += "\n<script>$(document).ready(function(){$('#" + formation + "').DataTable({'pageLength': 100});});</script>";
   html += '\n</body>\n</html>';
   console.log(html);
   fs.writeFileSync('./results/'+formation+'.html', html, 'UTF-8');
@@ -115,6 +114,7 @@ function fromDir(startPath, filter) {
     } else if (filename.indexOf(filter) >= 0) {
       // Read the JSON file synchronously
       var obj = JSON.parse(fs.readFileSync(filename, 'utf8'));
+      obj.folder = filename.split(path.sep).slice(0, -2).join(path.sep);
       var form = filename.split(path.sep)[1];
       if (form in conf.tableHeaders === false) {
         console.log("The lookup index is not in table header, please check how the filename is splitted in fromDir function in app.js", form);
