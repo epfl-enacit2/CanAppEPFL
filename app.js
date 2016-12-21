@@ -83,7 +83,8 @@ Object.keys(dataApp).map((formation)=>{
       case 'stages':
         return '\n\t\t\t<td nowrap>' + user[header].map(stage => stage.employeur).join(',<br />') + '</td>';
       case 'annexes':
-        var annexesPath = '..' + path.sep + user.folder + path.sep + 'annexes/' ;
+        //var annexesPath = '..' + path.sep + user.folder + path.sep + 'annexes/' ;
+        var annexesPath = './' + user.folderUser + path.sep + 'annexes' + path.sep ;
         return '\n\t\t\t<td nowrap><ul>' + user[header].map(annexe => '<li><a target="_blank" href="' + annexesPath + annexe + '">' + annexe + '</a></li>').join('\n') + '</ul></td>';
       default:
         return '\n\t\t\t<td>' + user[header] + '</td>';
@@ -93,7 +94,7 @@ Object.keys(dataApp).map((formation)=>{
   html += '\n\t</table>';
   html += "\n<script>$(document).ready(function(){$('#" + formation + "').DataTable({'pageLength': 100});});</script>";
   html += '\n</body>\n</html>';
-  console.log(html);
+  //console.log(html);
   fs.writeFileSync('./results/'+formation+'.html', html, 'UTF-8');
 });
 
@@ -115,6 +116,8 @@ function fromDir(startPath, filter) {
       // Read the JSON file synchronously
       var obj = JSON.parse(fs.readFileSync(filename, 'utf8'));
       obj.folder = filename.split(path.sep).slice(0, -2).join(path.sep);
+      obj.folderUser = filename.split(path.sep).slice(2, -2).join(path.sep);
+      //console.log(obj.folder2)
       var form = filename.split(path.sep)[1];
       if (form in conf.tableHeaders === false) {
         console.log("The lookup index is not in table header, please check how the filename is splitted in fromDir function in app.js", form);
