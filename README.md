@@ -12,20 +12,18 @@ Suivant la structure de fichiers suivantes
 ├── EmployesCommerce
 ├── GardiensAnimaux
 ├── Informaticiens
-│   ├── G25203--13-10-2016--05-49-15--email
-│   └── G25471--15-11-2016--04-46-25--email
-│       ├── annexes
-│       │   ├── 241-Rapport-de-stage.pdf
-│       │   ├── 370-LM.pdf
-│       │   ├── 506-Document-identity.pdf
-│       │   ├── 531-CV.pdf
-│       │   ├── 645-Bulletins-scolaires.pdf
-│       │   ├── 658-Certificat-scolaire.pdf
-│       │   ├── 911-Rapport-de-stage2.pdf
-│       │   ├── 962-Document-identity2.pdf
-│       │   └── 965-Rapport-de-stage3.pdf
-│       └── informations
-│           └── informations.json
+│   ├── 2016-11-26_08-27-39_email
+│   └── 2016-12-13_11-03-32_email
+│   ├── annexes
+│   │   ├── annexe1.pdf
+│   │   ├── annexe2.pdf
+│   │   ├── carte-identite.jpeg
+│   │   ├── curriculum-vitae.pdf
+│   │   ├── lettre-motivation.pdf
+│   │   ├── photo-passeport.jpeg
+│   │   └── Thumbs.db
+│   └── informations
+│       └── informations.json
 ├── Logisticiens
 └── Polymecaniciens
 ```
@@ -39,50 +37,31 @@ Où, par niveau :
 
 ## Description du système
 
-Le but est de faire un script qui permet de récolter les informations contenues dans les différents fichiers `informations.json` de la structure ci-dessus.
+Le script permet de parser les informations contenue dans les fichiers `informations.json` de chaque candidatures.
 
-1. Fournir une liste d'objets JSON par profession concaténant tous les fichiers informations.json
-    * un fichier JSON par profession contenant toutes les candidatures
-    * un fichier JSON au plus haut niveau contenant toutes les candidatures de toutes les profession
+  * Récupère les données `informations.json` pour les mettre dans `AllIn.json`
+  * Crèe un fichier html par type de métier (jquery + datatable)
+  * Pour les informaticiens, upload les données dans un google spreadsheet
 
-2. Manipuler le fichier JSON (général ou par profession) pour ne garder que les informations utiles (voir informations utiles pour les Informaticiens) dans le but de créer un fichier tableur facilement manipulable pour tout un chacun (e.g. csv, html ou excel).
+## Images
+Pour les fichiers HTML soient portables, utiliser:
+`echo "data:image/jpeg;base64,$(base64 DSC_0251.JPG)"`
+dans la balise src de l'imgage, e.g.
+`<img src=""data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAA4KCw0L[...]AFqLPzY" alt="mon image" />`
 
 
-## Améliorations optionnelles
+# Inject json datas into google spreadsheet
 
-Pour améliorer le système, les éléments suivants pourraient être prit en considération:
-
-  * automatisation de la génération du fichier (idéalement après chaque création de nouvelles candidatures)
-  * création de différents fichiers
-    * JSON
-    * Excel
-    * google spreadsheet
-    * HTML
-  * création d'un site de visualisation des résultats avec accès limité en fonction des groupes
-
-## Informations diverses
-
-### Informations utiles pour les Informaticiens
-```
- - "datePostulation": "12-11-2016--07:59:37"
- - "filiere":
- - "maturite":
- - "genreApprenti":
- - "nomApprenti":
- - "prenomApprenti":
- - "addresseApprentiComplete":  CONCAT RUE + NPA + VILLE
- - "telFixeApprenti":
- - "telMobileApprenti":
- - "mailApprenti": "xxx@gmail.com",
- - "dateNaissanceApprenti": "JJ\/MM\/YYYY",
- - "origineApprenti":
- - "nationaliteApprenti":
- - "permisEtranger":
- - "langueMaternelleApprenti":
- - "connaissancesLinguistiques": CONCAT avec ,
- - "majeur": "false",
- - "anneeFinScolarite": "YYYY",
- - "activitesProfessionnelles": CONCAT employeur
- - "stages": CONCAT employeur
- - "dejaCandidat":  avec "anneeCandidature": si true
-```
+## How to define secrets
+  1. https://developers.google.com/identity/protocols/OAuth2
+  1. https://console.developers.google.com/apis/library (Check that it's the user you want)
+  1. Click sheets apis
+  1. Créer un projet
+  1. Activer le projet
+  1. Créer les identifiants
+    1. API: Google Sheets API
+    1. Plate-forme: Autre plate-forme avec interface utilisateur
+    1. Accès: Données utilisateur
+  1. Créer un ID client (OAuth), e.g. CanAppClient
+  1. Configurer l'écran d'autorisation OAuth (email@epfl + Nom de produit (i.e. Can APP))
+  1. Télécharger les identifiants (fichier client_id.json, à placer dans le dossier de l'application)  

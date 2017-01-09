@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "glob": "^7.1.1"
+    "glob": "^7.1.1",
+    "google-auth-library": "^0.9.10",
+    "googleapis": "^14.2.0"
   }
 }
