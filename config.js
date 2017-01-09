@@ -45,17 +45,27 @@ module.exports = {
                           'Activités Pro.',
                           'Stages',
                           '<img src="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIDSURBVDjLpZJPSJRRFMXPN46GWqRjZjkOhILU2lXUotzYqglmEQURZLtQbFEK2VLIlQVu2kXQIsOghDaFZS1yI4Vhf3CcwWSgNlmRY3z3nPu10GxEF2UXHo97ee/AuecXRFGE/6nYvzw+M5LpO3XnRNmWBRjqNI03S2dBqYXuZ50pp2ckdYhqE1VPCjKBFBprknAKc4XcjbELj3vWCXQ/7TwoqTdZ1ZSurUygurwa8VgcigS5w11gJJiIN9lpZD/ODTy59KI/DgBd4+dSLu/dnziQbqjeg2UWEQvKQBe0ejzSWm9G0FgBAHEAEJVJbm9K11ftBp0ISWQ/v0P+Ux5rFoxo3JWEJMzN54Ynrry8XCrQsXNbDYq2BMkx/nZ8QdToyNmxi6ULax88PC3j1ET/ZNe6FEi1VZZXIUAMhS8F0Ljh80oKvGvG86WzOADQCIoIggAmgiE3jfH51cmBTUFiqKnFH4tYtiISO+pgxsyx60eH/oaNIIoinLx9vKexNjnUsrcFihxLy0uYnZ9FfiEP2h8ORK30EmaGPwRrFsw4mivkjlSUVaTrEw0IEaK1uRXN+1rgkeDuoAsOh9zx8N7Yegv3Ox8tWMjBV+9fP5jJzuDb1+8o/iyu7EOCuaBI4CpQojZHuf3aoRRNGZIdMrWRqpMpJgqS4/ftcuRuzQcbBLZSvwCJx2jrjVn/uwAAAABJRU5ErkJggg==" title="dejaCandidat"/> 2eme Cand',
-                          '<img src="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAEZSURBVCjPY/jPgB9iEVoqPefllFPdNk2GWBUsVpz9ctL1rkcNW/v+59VhKFgkPfP+xI0dF+uC/jPkWCR/Q1MwX2TGvf7Nretr/UG8BO2I5ygK5olP/dCzpWV+dVAhd+bB+JawrT7ICubIT3nbvaFpVkVqgVDa0diO4CneN91E4Qpmq0560jW/YXp5XB5nyq2YrqCFno9cJeG+mKk48UHHjLruMu8czuSbkfUBizxeucrDw2GGev/71uW1jMVrsq4nPIto8F/g8caFDymgetxbHlVLgDjxnWExPjPdb7sIoYRkk17FywJRECdY1Xux201nMbSgLufO25qyJUY1yNrzsus9JxkscZHMG+kVcN7jqWueowARkUWiAgBEUvolGfpITwAAAABJRU5ErkJggg==" title="Annexes"/> Annexes']
-        },
+                          '<img src="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAEZSURBVCjPY/jPgB9iEVoqPefllFPdNk2GWBUsVpz9ctL1rkcNW/v+59VhKFgkPfP+xI0dF+uC/jPkWCR/Q1MwX2TGvf7Nretr/UG8BO2I5ygK5olP/dCzpWV+dVAhd+bB+JawrT7ICubIT3nbvaFpVkVqgVDa0diO4CneN91E4Qpmq0560jW/YXp5XB5nyq2YrqCFno9cJeG+mKk48UHHjLruMu8czuSbkfUBizxeucrDw2GGev/71uW1jMVrsq4nPIto8F/g8caFDymgetxbHlVLgDjxnWExPjPdb7sIoYRkk17FywJRECdY1Xux201nMbSgLufO25qyJUY1yNrzsus9JxkscZHMG+kVcN7jqWueowARkUWiAgBEUvolGfpITwAAAABJRU5ErkJggg==" title="Annexes"/> Annexes'],
+              "headersSS" : ['Date post.', 'Métier', 'Matu', 'Genre',
+                                 'Nom', 'Prénom', 'Adresse',
+                                 'Tel', 'Mobile', 'Email',
+                                 'Naissance', 'Origine', 'Nationalité',
+                                 'Permis', 'Langue Mat', 'Autres langues',
+                                 '>18', 'Fin Ecole', 'Activités Pro.', 'Stages',
+                                 '2eme Cand', 'Annexes']
+              },
+
 
         "GardiensAnimaux": {
             "keys" :    ['datePostulation', 'maturite', 'genreApprenti', 'nomApprenti', 'prenomApprenti', 'addresseApprentiComplete', 'telFixeApprenti', 'telMobileApprenti', 'mailApprenti', 'dateNaissanceApprenti', 'origineApprenti', 'nationaliteApprenti', 'permisEtranger', 'langueMaternelleApprenti', 'connaissancesLinguistiques', 'majeur', 'anneeFinScolarite', 'activitesProfessionnelles', 'stages', 'dejaCandidat'],
             "headers":  ['datePostulation', 'maturite', 'genreApprenti', 'nomApprenti', 'prenomApprenti', 'addresseApprentiComplete', 'telFixeApprenti', 'telMobileApprenti', 'mailApprenti', 'dateNaissanceApprenti', 'origineApprenti', 'nationaliteApprenti', 'permisEtranger', 'langueMaternelleApprenti', 'connaissancesLinguistiques', 'majeur', 'anneeFinScolarite', 'activitesProfessionnelles', 'stages', 'dejaCandidat']
+            "headersSS":  ['datePostulation', 'maturite', 'genreApprenti', 'nomApprenti', 'prenomApprenti', 'addresseApprentiComplete', 'telFixeApprenti', 'telMobileApprenti', 'mailApprenti', 'dateNaissanceApprenti', 'origineApprenti', 'nationaliteApprenti', 'permisEtranger', 'langueMaternelleApprenti', 'connaissancesLinguistiques', 'majeur', 'anneeFinScolarite', 'activitesProfessionnelles', 'stages', 'dejaCandidat']
         },
 
         "Logisticiens": {
             "keys" :    ['datePostulation', 'maturite', 'genreApprenti', 'nomApprenti', 'prenomApprenti', 'addresseApprentiComplete', 'telFixeApprenti', 'telMobileApprenti', 'mailApprenti', 'dateNaissanceApprenti', 'origineApprenti', 'nationaliteApprenti', 'permisEtranger', 'langueMaternelleApprenti', 'connaissancesLinguistiques', 'majeur', 'anneeFinScolarite', 'activitesProfessionnelles', 'stages', 'dejaCandidat'],
             "headers":  ['datePostulation', 'maturite', 'genreApprenti', 'nomApprenti', 'prenomApprenti', 'addresseApprentiComplete', 'telFixeApprenti', 'telMobileApprenti', 'mailApprenti', 'dateNaissanceApprenti', 'origineApprenti', 'nationaliteApprenti', 'permisEtranger', 'langueMaternelleApprenti', 'connaissancesLinguistiques', 'majeur', 'anneeFinScolarite', 'activitesProfessionnelles', 'stages', 'dejaCandidat']
+            "headersSS":  ['datePostulation', 'maturite', 'genreApprenti', 'nomApprenti', 'prenomApprenti', 'addresseApprentiComplete', 'telFixeApprenti', 'telMobileApprenti', 'mailApprenti', 'dateNaissanceApprenti', 'origineApprenti', 'nationaliteApprenti', 'permisEtranger', 'langueMaternelleApprenti', 'connaissancesLinguistiques', 'majeur', 'anneeFinScolarite', 'activitesProfessionnelles', 'stages', 'dejaCandidat']
         }
 
     }
