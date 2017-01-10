@@ -195,7 +195,7 @@ function updateCandidats(auth) {
                                     case 'maturite':
                                     case 'majeur':
                                     case 'dejaCandidat':
-                                        return (x[tKey] == "true") ? { userEnteredValue: { stringValue: '✔' }, userEnteredFormat: { horizontalAlignment: "CENTER", verticalAlignment: "MIDDLE", backgroundColor: {red:1,green:0.7,blue:0.7 } } } : { userEnteredValue: { stringValue: '⨯' }, userEnteredFormat: { horizontalAlignment: "CENTER", verticalAlignment: "MIDDLE",  backgroundColor: { red:0.7,green:1,blue:0.7 } } } ;
+                                        return (x[tKey] == "true") ? { userEnteredValue: { stringValue: '✔' }, userEnteredFormat: { horizontalAlignment: "CENTER", verticalAlignment: "MIDDLE", backgroundColor: { red:0.7,green:1,blue:0.7 } } } : { userEnteredValue: { stringValue: '⨯' }, userEnteredFormat: { horizontalAlignment: "CENTER", verticalAlignment: "MIDDLE",  backgroundColor: {red:1,green:0.7,blue:0.7 } } } ;
                                     case 'genreApprenti':
                                         return (x[tKey] == "Femme") ? { userEnteredValue: { stringValue: '♀' }, userEnteredFormat: { horizontalAlignment: "CENTER", verticalAlignment: "MIDDLE" }} : { userEnteredValue: { stringValue: '♂' }, userEnteredFormat: { horizontalAlignment: "CENTER", verticalAlignment: "MIDDLE" }} ;
                                     case 'mailApprenti':
