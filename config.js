@@ -55,7 +55,6 @@ module.exports = {
                                  '2eme Cand', 'Annexes']
               },
 
-
         "GardiensAnimaux": {
             "keys" :    ['datePostulation', 'maturite', 'genreApprenti', 'nomApprenti', 'prenomApprenti', 'addresseApprentiComplete', 'telFixeApprenti', 'telMobileApprenti', 'mailApprenti', 'dateNaissanceApprenti', 'origineApprenti', 'nationaliteApprenti', 'permisEtranger', 'langueMaternelleApprenti', 'connaissancesLinguistiques', 'majeur', 'anneeFinScolarite', 'activitesProfessionnelles', 'stages', 'dejaCandidat'],
             "headers":  ['datePostulation', 'maturite', 'genreApprenti', 'nomApprenti', 'prenomApprenti', 'addresseApprentiComplete', 'telFixeApprenti', 'telMobileApprenti', 'mailApprenti', 'dateNaissanceApprenti', 'origineApprenti', 'nationaliteApprenti', 'permisEtranger', 'langueMaternelleApprenti', 'connaissancesLinguistiques', 'majeur', 'anneeFinScolarite', 'activitesProfessionnelles', 'stages', 'dejaCandidat'],
@@ -66,8 +65,13 @@ module.exports = {
             "keys" :    ['datePostulation', 'maturite', 'genreApprenti', 'nomApprenti', 'prenomApprenti', 'addresseApprentiComplete', 'telFixeApprenti', 'telMobileApprenti', 'mailApprenti', 'dateNaissanceApprenti', 'origineApprenti', 'nationaliteApprenti', 'permisEtranger', 'langueMaternelleApprenti', 'connaissancesLinguistiques', 'majeur', 'anneeFinScolarite', 'activitesProfessionnelles', 'stages', 'dejaCandidat'],
             "headers":  ['datePostulation', 'maturite', 'genreApprenti', 'nomApprenti', 'prenomApprenti', 'addresseApprentiComplete', 'telFixeApprenti', 'telMobileApprenti', 'mailApprenti', 'dateNaissanceApprenti', 'origineApprenti', 'nationaliteApprenti', 'permisEtranger', 'langueMaternelleApprenti', 'connaissancesLinguistiques', 'majeur', 'anneeFinScolarite', 'activitesProfessionnelles', 'stages', 'dejaCandidat'],
             "headersSS":  ['datePostulation', 'maturite', 'genreApprenti', 'nomApprenti', 'prenomApprenti', 'addresseApprentiComplete', 'telFixeApprenti', 'telMobileApprenti', 'mailApprenti', 'dateNaissanceApprenti', 'origineApprenti', 'nationaliteApprenti', 'permisEtranger', 'langueMaternelleApprenti', 'connaissancesLinguistiques', 'majeur', 'anneeFinScolarite', 'activitesProfessionnelles', 'stages', 'dejaCandidat']
-        }
+        },
 
+        "Polymecaniciens": {
+            "keys" :    ['datePostulation', 'maturite', 'genreApprenti', 'nomApprenti', 'prenomApprenti', 'addresseApprentiComplete', 'telFixeApprenti', 'telMobileApprenti', 'mailApprenti', 'dateNaissanceApprenti', 'origineApprenti', 'nationaliteApprenti', 'permisEtranger', 'langueMaternelleApprenti', 'connaissancesLinguistiques', 'majeur', 'anneeFinScolarite', 'activitesProfessionnelles', 'stages', 'dejaCandidat'],
+            "headers":  ['datePostulation', 'maturite', 'genreApprenti', 'nomApprenti', 'prenomApprenti', 'addresseApprentiComplete', 'telFixeApprenti', 'telMobileApprenti', 'mailApprenti', 'dateNaissanceApprenti', 'origineApprenti', 'nationaliteApprenti', 'permisEtranger', 'langueMaternelleApprenti', 'connaissancesLinguistiques', 'majeur', 'anneeFinScolarite', 'activitesProfessionnelles', 'stages', 'dejaCandidat'],
+            "headersSS":  ['datePostulation', 'maturite', 'genreApprenti', 'nomApprenti', 'prenomApprenti', 'addresseApprentiComplete', 'telFixeApprenti', 'telMobileApprenti', 'mailApprenti', 'dateNaissanceApprenti', 'origineApprenti', 'nationaliteApprenti', 'permisEtranger', 'langueMaternelleApprenti', 'connaissancesLinguistiques', 'majeur', 'anneeFinScolarite', 'activitesProfessionnelles', 'stages', 'dejaCandidat']
+        }
     }
 
 }

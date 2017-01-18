@@ -41,7 +41,7 @@ Le script permet de parser les informations contenue dans les fichiers `informat
 
   * Récupère les données `informations.json` pour les mettre dans `AllIn.json`
   * Crèe un fichier html par type de métier (jquery + datatable)
-  * Pour les informaticiens, upload les données dans un google spreadsheet
+  * Pour les informaticiens, upload les données dans un google spreadsheet (`push_to_gs.js`)
 
 ## Images
 Pour les fichiers HTML soient portables, utiliser:
@@ -49,8 +49,11 @@ Pour les fichiers HTML soient portables, utiliser:
 dans la balise src de l'imgage, e.g.
 `<img src=""data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAA4KCw0L[...]AFqLPzY" alt="mon image" />`
 
-
-# Inject json datas into google spreadsheet
+## Usage
+  1. Copier le dossier `valides` pour - ou du moins s'assurer de - le rendre accessible au script `app.js`
+  2. Lancer le script : `node app.js`
+  3. Metter à jour `AllIn.json` puis les différents fichiers html générés dans `./results`
+  4. Utiliser `push_to_gs.js` pour mettre à jour le google spreadsheet
 
 ## How to define secrets
   1. https://developers.google.com/identity/protocols/OAuth2
