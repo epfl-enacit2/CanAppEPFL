@@ -4,3 +4,4 @@ node_modules/*
 valides
 results
 client_id.json
+.credentials
