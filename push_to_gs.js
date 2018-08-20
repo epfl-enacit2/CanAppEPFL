@@ -1,8 +1,6 @@
 var fs = require('fs');
-var path = require('path');
 var readline = require('readline');
-var google = require('googleapis');
-var googleAuth = require('google-auth-library');
+const {google} = require('googleapis');
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/sheets.googleapis.com-nodejs-quickstart.json
@@ -31,8 +29,7 @@ function authorize(credentials, callback) {
   var clientSecret = credentials.installed.client_secret;
   var clientId = credentials.installed.client_id;
   var redirectUrl = credentials.installed.redirect_uris[0];
-  var auth = new googleAuth();
-  var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
+  var oauth2Client = new google.auth.OAuth2(clientId, clientSecret, redirectUrl);
 
   // Check if we have previously stored a token.
   fs.readFile(TOKEN_PATH, function (err, token) {
@@ -99,7 +96,6 @@ function storeToken(token) {
 
 }
 
-
 // HELP https://developers.google.com/sheets/api/
 function updateCandidats(auth) {
   var sheets = google.sheets('v4');
@@ -107,8 +103,6 @@ function updateCandidats(auth) {
   var users = JSON.parse(fs.readFileSync('AllIn.json', 'utf8'))
   var userKeys = require('./config.js').tableHeaders.Informaticiens.keys
   var spreadSheetsHeader = require('./config.js').tableHeaders.Informaticiens.headersSS
-
-  // console.log(users)
 
   // READ https://developers.google.com/sheets/api/guides/batchupdate
   // To create headers based on the tableHeaders in config.js
@@ -147,7 +141,7 @@ function updateCandidats(auth) {
   })
   sheets.spreadsheets.batchUpdate({
     auth: auth,
-    spreadsheetId: '1CzpEds050P0x4YMNweg4JLHMb-ZS5UGoi39rQkwhnWA',
+    spreadsheetId: '1ErolkP45JGHp2R006OWZykafEYJGS4loVWDt3-i2-Vo',
     resource: {
       requests: {
         updateCells: {
