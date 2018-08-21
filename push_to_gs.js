@@ -1,6 +1,6 @@
 var fs = require('fs');
 var readline = require('readline');
-const {google} = require('googleapis');
+const { google } = require('googleapis');
 
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/sheets.googleapis.com-nodejs-quickstart.json
@@ -93,52 +93,159 @@ function storeToken(token) {
       throw err;
     }
   }
-
 }
 
 // HELP https://developers.google.com/sheets/api/
 function updateCandidats(auth) {
   var sheets = google.sheets('v4');
-
   var users = JSON.parse(fs.readFileSync('AllIn.json', 'utf8'))
-  var userKeys = require('./config.js').tableHeaders.Informaticiens.keys
-  var spreadSheetsHeader = require('./config.js').tableHeaders.Informaticiens.headersSS
+
+  // get speadsheet's sheets
+  var promise = new Promise(resolve => {
+    sheets.spreadsheets.get({
+      auth: auth,
+      spreadsheetId: '1ErolkP45JGHp2R006OWZykafEYJGS4loVWDt3-i2-Vo'
+    }, (err, res) => {
+      if (!err) {
+        resolve(res.data.sheets);
+      }
+    })
+  });
+
+  promise.then(result => {
+    let sheetTabs = result
+    createSheetsAndWriteHeader(sheets, auth, sheetTabs);
+  })
+
+  // var userKeys = require('./config.js').tableHeaders.Informaticiens.keys
+  // var spreadSheetsHeader = require('./config.js').tableHeaders.Informaticiens.headersSS
 
   // READ https://developers.google.com/sheets/api/guides/batchupdate
   // To create headers based on the tableHeaders in config.js
   // TODO: should be possible to make the update in one shot, see https://developers.google.com/sheets/api/guides/values
+  // writeHeadersSheet(sheets, auth, spreadSheetsHeader);
+  // writeInformaticiens(sheets, auth, users, userKeys); // TODO: Generalize this function
+  // writeData(sheets, auth, jobKeys, users);
+
+  // TODO: Write for all jobs, in a different sheet page
+}
+
+function createSheetsAndWriteHeader(sheets, auth, sheetsInfo) {
+  // Create a sheet for each job and write its data headers
+  var jobKeys = require('./config.js').tableHeaders
+  Object.keys(jobKeys).forEach(job => {
+    var jobHeaders = require('./config.js').tableHeaders[job].headersSS
+    createSheets(sheets, job, auth);
+    writeHeadersSheet(sheets, auth, job, jobHeaders, sheetsInfo);
+  });
+}
+
+function createSheets(sheets, name, auth) {
   sheets.spreadsheets.batchUpdate({
     auth: auth,
     spreadsheetId: '1ErolkP45JGHp2R006OWZykafEYJGS4loVWDt3-i2-Vo',
     resource: {
       requests: {
-        updateCells: {
-          start: {
-            sheetId: 0,
-            rowIndex: 0,
-            columnIndex: 0
-          },
-          rows: {
-            values: spreadSheetsHeader.map(function (tKey) {
-              return {
-                userEnteredValue: { stringValue: tKey },
-                userEnteredFormat: {
-                  textFormat: { bold: true },
-                  horizontalAlignment: "CENTER",
-                  backgroundColor: {
-                    red: 0.8,
-                    green: 0.8,
-                    blue: 0.8
-                  }
-                }
-              }
-            })
-          },
-          fields: '*',
+        addSheet: {
+          properties: {
+            title: name
+          }
         }
       }
     }
-  })
+  }, (err) => {
+    if (!err) {
+      console.log("Added");
+      return;
+    }
+  });
+}
+
+function writeData(sheets, auth, jobKeys, users) {
+  // get sheet id
+  sheets.spreadsheets.batchUpdate({
+    auth: auth,
+    spreadsheetId: '1ErolkP45JGHp2R006OWZykafEYJGS4loVWDt3-i2-Vo',
+    range: Object.keys(jobKeys)[0],
+    updateCells: {
+      start: {
+        sheetId: 0,
+        rowIndex: 1,
+        columnIndex: 0
+      },
+      rows: users.Informaticiens.map(function (x) {
+        return {
+          values: users[Object.keys(jobKeys)[0]].map(function (tKey) {
+            switch (tKey) {
+              case "datePostulation":
+                // WORKS ONLY FOR OLD DATE FORMAT, e.g. 1-11-2016--05:43:43
+                // => 2016-11-02 05:43:43
+                // Date formating: https://developers.google.com/sheets/api/samples/formatting#set_a_custom_datetime_or_decimal_format_for_a_range
+                // Looks like it needs a range to apply to
+                /*var mydate = new Date(dateP);
+                var milliseconds = mydate.getTime();
+                return { userEnteredValue: { numberValue: milliseconds },
+                         userEnteredFormat: { numberFormat: { type: "DATE", pattern: "mmm dd yyyy hh+:mm" }}
+                     }*/
+                var dP = x[tKey].split('-');
+                var dateP = dP[2] + '-' + ('00' + dP[1]).substring(dP[1].length) + '-' + ('00' + dP[0]).substring(dP[0].length) + ' ' + dP[4];
+                return { userEnteredValue: { stringValue: dateP }, };
+              case 'filiere':
+                var metier = '';
+                switch (x[tKey]) {
+                  case 'entreprise':
+                    metier = 'Entreprise';
+                    break;
+                  case 'developpementApplications':
+                    metier = 'Dev';
+                    break;
+                  case 'techniqueSysteme':
+                    metier = 'TechSys';
+                    break;
+                  case 'neSaisPas':
+                    metier = '?';
+                    break;
+                  default:
+                    metier = 'NaN';
+                }
+                return { userEnteredValue: { stringValue: metier }, };
+              case 'addresseApprentiComplete':
+                return { userEnteredValue: { stringValue: x[tKey].rue + '\n' + x[tKey].NPA } };
+              case 'maturite':
+              case 'majeur':
+              case 'dejaCandidat':
+                return (x[tKey] == "true") ? { userEnteredValue: { stringValue: '✔' }, userEnteredFormat: { horizontalAlignment: "CENTER", verticalAlignment: "MIDDLE", backgroundColor: { red: 0.7, green: 1, blue: 0.7 } } } : { userEnteredValue: { stringValue: '⨯' }, userEnteredFormat: { horizontalAlignment: "CENTER", verticalAlignment: "MIDDLE", backgroundColor: { red: 1, green: 0.7, blue: 0.7 } } };
+              case 'genreApprenti':
+                return (x[tKey] == "Femme") ? { userEnteredValue: { stringValue: '♀' }, userEnteredFormat: { horizontalAlignment: "CENTER", verticalAlignment: "MIDDLE" } } : { userEnteredValue: { stringValue: '♂' }, userEnteredFormat: { horizontalAlignment: "CENTER", verticalAlignment: "MIDDLE" } };
+              case 'mailApprenti':
+                return { userEnteredValue: { formulaValue: '=HYPERLINK("mailto:' + x[tKey] + '";"' + x[tKey] + '")' } };
+              case 'connaissancesLinguistiques':
+                return { userEnteredValue: { stringValue: x[tKey].map(function (lg) { return lg; }).join(", ") } };
+              case 'activitesProfessionnelles':
+              case 'stages':
+                return { userEnteredValue: { stringValue: x[tKey].map(function (empl) { return empl.employeur; }).join('\n') } };
+              case 'annexes':
+                return { userEnteredValue: { stringValue: x[tKey].map(function (anx) { return anx; }).join('\n') } };
+              case 'representants':
+              case 'scolarite':
+                return { userEnteredValue: { stringValue: "xxx" } };
+              default:
+                return { userEnteredValue: { stringValue: x[tKey] } };
+            }
+          })
+        };
+      }),
+      fields: '*'
+    }
+  }), (err, res) => {
+    console.log(res)
+    if (err) {
+      console.log(err)
+    }
+  }
+}
+
+function writeInformaticiens(sheets, auth, users, userKeys) {
   sheets.spreadsheets.batchUpdate({
     auth: auth,
     spreadsheetId: '1ErolkP45JGHp2R006OWZykafEYJGS4loVWDt3-i2-Vo',
@@ -157,7 +264,6 @@ function updateCandidats(auth) {
                   case "datePostulation":
                     // WORKS ONLY FOR OLD DATE FORMAT, e.g. 1-11-2016--05:43:43
                     // => 2016-11-02 05:43:43
-
                     // Date formating: https://developers.google.com/sheets/api/samples/formatting#set_a_custom_datetime_or_decimal_format_for_a_range
                     // Looks like it needs a range to apply to
                     /*var mydate = new Date(dateP);
@@ -165,10 +271,9 @@ function updateCandidats(auth) {
                     return { userEnteredValue: { numberValue: milliseconds },
                              userEnteredFormat: { numberFormat: { type: "DATE", pattern: "mmm dd yyyy hh+:mm" }}
                          }*/
-
                     var dP = x[tKey].split('-');
                     var dateP = dP[2] + '-' + ('00' + dP[1]).substring(dP[1].length) + '-' + ('00' + dP[0]).substring(dP[0].length) + ' ' + dP[4];
-                    return { userEnteredValue: { stringValue: dateP }, }
+                    return { userEnteredValue: { stringValue: dateP }, };
                   case 'filiere':
                     var metier = '';
                     switch (x[tKey]) {
@@ -187,9 +292,9 @@ function updateCandidats(auth) {
                       default:
                         metier = 'NaN';
                     }
-                    return { userEnteredValue: { stringValue: metier }, }
+                    return { userEnteredValue: { stringValue: metier }, };
                   case 'addresseApprentiComplete':
-                    return { userEnteredValue: { stringValue: x[tKey].rue + '\n' + x[tKey].NPA } }
+                    return { userEnteredValue: { stringValue: x[tKey].rue + '\n' + x[tKey].NPA } };
                   case 'maturite':
                   case 'majeur':
                   case 'dejaCandidat':
@@ -197,26 +302,77 @@ function updateCandidats(auth) {
                   case 'genreApprenti':
                     return (x[tKey] == "Femme") ? { userEnteredValue: { stringValue: '♀' }, userEnteredFormat: { horizontalAlignment: "CENTER", verticalAlignment: "MIDDLE" } } : { userEnteredValue: { stringValue: '♂' }, userEnteredFormat: { horizontalAlignment: "CENTER", verticalAlignment: "MIDDLE" } };
                   case 'mailApprenti':
-                    return { userEnteredValue: { formulaValue: '=HYPERLINK("mailto:' + x[tKey] + '";"' + x[tKey] + '")' } }
+                    return { userEnteredValue: { formulaValue: '=HYPERLINK("mailto:' + x[tKey] + '";"' + x[tKey] + '")' } };
                   case 'connaissancesLinguistiques':
-                    return { userEnteredValue: { stringValue: x[tKey].map(function (lg) { return lg }).join(", ") } }
+                    return { userEnteredValue: { stringValue: x[tKey].map(function (lg) { return lg; }).join(", ") } };
                   case 'activitesProfessionnelles':
                   case 'stages':
-                    return { userEnteredValue: { stringValue: x[tKey].map(function (empl) { return empl.employeur }).join('\n') } }
+                    return { userEnteredValue: { stringValue: x[tKey].map(function (empl) { return empl.employeur; }).join('\n') } };
                   case 'annexes':
-                    return { userEnteredValue: { stringValue: x[tKey].map(function (anx) { return anx }).join('\n') } }
+                    return { userEnteredValue: { stringValue: x[tKey].map(function (anx) { return anx; }).join('\n') } };
                   case 'representants':
                   case 'scolarite':
-                    return { userEnteredValue: { stringValue: "xxx" } }
+                    return { userEnteredValue: { stringValue: "xxx" } };
                   default:
-                    return { userEnteredValue: { stringValue: x[tKey] } }
+                    return { userEnteredValue: { stringValue: x[tKey] } };
                 }
               })
-            }
+            };
           }),
           fields: '*'
         }
       }
     }
-  })
+  });
 }
+
+// function getSheetsTabs (sheets, auth) {
+//   sheets.spreadsheets.get({
+//     auth: auth,
+//     spreadsheetId: '1ErolkP45JGHp2R006OWZykafEYJGS4loVWDt3-i2-Vo'
+//   }, (err, res) => {
+//     console.log(res)
+//   })
+// }
+
+function getSheetIdByName (sheetTabs, name) {
+  let sheet = sheetTabs.find(x => x.properties.title === name)
+  return sheet.properties.sheetId
+}
+
+function writeHeadersSheet(sheets, auth, job, jobHeaders, sheetsInfo) {
+  let sheet_id = getSheetIdByName(sheetsInfo, job)
+  sheets.spreadsheets.batchUpdate({
+    auth: auth,
+    spreadsheetId: '1ErolkP45JGHp2R006OWZykafEYJGS4loVWDt3-i2-Vo',
+    resource: {
+      requests: {
+        updateCells: {
+          start: {
+            sheetId: sheet_id,
+            rowIndex: 0,
+            columnIndex: 0
+          },
+          rows: {
+            values: jobHeaders.map(function (tKey) {
+              return {
+                userEnteredValue: { stringValue: tKey },
+                userEnteredFormat: {
+                  textFormat: { bold: true },
+                  horizontalAlignment: "CENTER",
+                  backgroundColor: {
+                    red: 0.8,
+                    green: 0.8,
+                    blue: 0.8
+                  }
+                }
+              };
+            })
+          },
+          fields: '*',
+        }
+      }
+    }
+  });
+}
+
