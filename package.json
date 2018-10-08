@@ -1,15 +1,21 @@
 {
   "name": "canapp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node app.js",
+    "push": "node app.js && node push_to_gs.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/epfl-enacit2/CanAppEPFL"
+  },
+  "author": "https://github.com/epfl-enacit2/CanAppEPFL/graphs/contributors",
+  "license": "MIT",
   "dependencies": {
-    "glob": "^7.1.1",
+    "glob": "^7.1.3",
     "google-auth-library": "^1.6.1",
     "googleapis": "^32.0.0"
   }
